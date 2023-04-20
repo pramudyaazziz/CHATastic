@@ -52,7 +52,7 @@
         },
         data() {
             return {
-                image: window.location.origin + '/welcome.svg',
+                image: window.location.origin + '/assets/auth/img/welcome.svg',
                 form: useForm({
                     email: '',
                     password: ''

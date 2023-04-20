@@ -21,11 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        VerifyEmail::toMailUsing(function ($notifiable, $url) {
-            return (new \Illuminate\Notifications\Messages\MailMessage)
-                ->subject('Verify Email')
-                ->line('Please click this button bellow to verify your email address and activate your account')
-                ->action('Verify', $url);
-        });
+        //
     }
 }

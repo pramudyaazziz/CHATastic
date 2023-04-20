@@ -49,7 +49,7 @@
         },
         data() {
             return {
-                image: window.location.origin + '/welcome.svg',
+                image: window.location.origin + '/assets/auth/img/forgot.svg',
                 form: useForm({
                     email: ''
                 }),
