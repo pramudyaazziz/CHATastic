@@ -34,8 +34,8 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                         <h5>Verify</h5>
                         <h3 class="text-primary fw-bold">Email</h3>
                         <hr>
-                        <p class="text-muted">Thanks for signing up! Before getting started, could you verify your email address by clicking on the link
-                            we just emailed to you? If you didn't receive the email, we will gladly send you another</p>
+                        <p class="text-muted">Thanks for signing up! You could verify your email address by clicking on the link
+                            we just emailed to you? If you didn't receive the email make sure to check spam section as well!</p>
                         <form @submit.prevent="submit">
                             <div class="mt-4 d-flex justify-content-between">
                                 <button class="btn btn-primary">
@@ -52,7 +52,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                             </div>
                         </form>
                         <div class="mt-4 font-medium text-sm text-success" v-if="verificationLinkSent">
-                            A new verification link has been sent to the email address you provided during registration.
+                            New verification link has been sent to your email
                         </div>
                     </div>
                 </div>

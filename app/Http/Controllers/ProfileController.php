@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,48 +16,58 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): Response
+    public function edit(): Response
     {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+        return Inertia::render('Conversation/Profile', [
             'status' => session('status'),
+            'user' => User::find(Auth::user()->id)->load('platform'),
         ]);
+    }
+
+    /**
+     * Update the user's avatar.
+     */
+    public function avatar(Request $request)
+    {
+        $request->validate(['file' => 'required|mimes:png,jpg|max:2048']);
+
+        $default = $request->user()->avatar == 'default.png';
+        $file = $request->file('file');
+        if ($default) {
+            $file_name = uniqid('avatar-') . '.' . $file->getClientOriginalExtension();
+            $request->user()->update(['avatar' => $file_name]);
+        }
+        $file->move('avatars', $request->user()->avatar);
+
+        return back();
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
+        $user = User::find(Auth::user()->id);
         $request->validate([
-            'password' => ['required', 'current_password'],
+            'name' => 'required',
+            'username' => 'required|unique:users,username,' . $user->id,
+            'facebook' => 'nullable|active_url',
+            'phone_number' => 'nullable|numeric|digits_between:11,13|unique:users,username,' . $user->id,
+            'bio' => 'required|max:100',
         ]);
 
-        $user = $request->user();
+        if ($request->twitter || $request->facebook || $request->instagram) {
+            $user->platform()->update([
+                'twitter' => $request->twitter,
+                'facebook' => $request->facebook,
+                'instagram' => $request->instagram,
+            ]);
+        }
 
-        Auth::logout();
+        $user->update($request->all());
 
-        $user->delete();
+        session()->flash('status', 'Profile has been updated successfully.');
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Redirect::route('profile.edit');
     }
 }

@@ -15,7 +15,7 @@
                         <form @submit.prevent="submit">
                             <div class="mb-3">
                                 <label class="form-label">Email address</label>
-                                <input type="email" :class="[{ 'is-invalid': form.errors.email, 'form-control': true }]" v-model="form.email">
+                                <input type="email" autofocus :class="[{ 'is-invalid': form.errors.email, 'form-control': true }]" v-model="form.email">
                                 <div class="invalid-feedback">{{ form.errors.email }}</div>
                             </div>
                             <div class="mb-3">

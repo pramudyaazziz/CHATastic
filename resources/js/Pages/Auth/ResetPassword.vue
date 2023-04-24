@@ -49,7 +49,7 @@ const submit = () => {
                             <div class="mt-4">
                                 <div class="mb-3">
                                     <label class="form-label">Password</label>
-                                    <input type="password" :class="[{ 'is-invalid': form.errors.password, 'form-control': true}]" v-model="form.password" autocomplete="new-password">
+                                    <input type="password" autofocus :class="[{ 'is-invalid': form.errors.password, 'form-control': true}]" v-model="form.password" autocomplete="new-password">
                                     <div class="invalid-feedback">{{ form.errors.password }}</div>
                                 </div>
                             </div>

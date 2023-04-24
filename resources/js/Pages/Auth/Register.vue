@@ -1,9 +1,5 @@
 <script setup>
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
@@ -41,7 +37,7 @@ const submit = () => {
                         <form @submit.prevent="submit">
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
-                                <input autofocus type="text" :class="[{ 'is-invalid': form.errors.name, 'form-control': true }]" v-model="form.name">
+                                <input type="text" :class="[{ 'is-invalid': form.errors.name, 'form-control': true }]" v-model="form.name" autofocus>
                                 <div class="invalid-feedback">{{ form.errors.name }}</div>
                             </div>
                             <div class="mb-3">

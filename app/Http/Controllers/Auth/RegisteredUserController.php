@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Platform;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -40,7 +41,13 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'username' => fake()->unique()->userName(),
             'password' => Hash::make($request->password),
+            'bio' => "This is the default bio, try changing it!"
+        ]);
+
+        Platform::create([
+            'user_id' => $user->id
         ]);
 
         event(new Registered($user));
