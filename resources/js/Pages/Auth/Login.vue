@@ -27,7 +27,13 @@
                                 <Link :href="route('password.request')" class="text-end">Forgot Password</Link>
                             </div>
                             <div class="row ps-2 pe-2">
-                                <button type="submit" class="btn btn-primary">Login</button>
+                                <button type="submit" :class="[{ 'btn': true, 'btn-primary': true, 'loading': form.processing }]">
+                                    <div v-if="form.processing">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Login
+                                    </div>
+                                    <span v-else>Login</span>
+                                </button>
                             </div>
                         </form>
                         <div class="mt-4">

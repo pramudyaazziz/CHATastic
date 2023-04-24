@@ -56,7 +56,13 @@ const submit = () => {
                                 <div class="invalid-feedback">{{ form.errors.password_confirmation }}</div>
                             </div>
                             <div class="row ps-2 pe-2">
-                                <button type="submit" class="btn btn-primary">Register</button>
+                                <button type="submit" :class="[{ 'btn': true, 'btn-primary': true, 'loading': form.processing }]">
+                                    <div v-if="form.processing">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Register
+                                    </div>
+                                    <span v-else>Register</span>
+                                </button>
                             </div>
                         </form>
                         <div class="mt-4">

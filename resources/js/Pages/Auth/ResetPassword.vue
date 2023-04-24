@@ -64,7 +64,13 @@ const submit = () => {
 
                             <div class="flex items-center justify-end mt-4">
                                 <div class="row ps-2 pe-2">
-                                    <button type="submit" class="btn btn-primary">Set Password</button>
+                                    <button type="submit" :class="[{ 'btn': true, 'btn-primary': true, 'loading': form.processing }]">
+                                        <div v-if="form.processing">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Set Password
+                                        </div>
+                                        <span v-else>Set Password</span>
+                                    </button>
                                 </div>
                             </div>
                         </form>

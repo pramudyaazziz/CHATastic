@@ -46,18 +46,17 @@
                 <div class="col">
                     <div class="mt-4 d-flex justify-content-center">
                         <div class="container-image-profile">
-                            <img :src="avatarUrl" alt="">
+                            <img :src="avatarUrl" alt="avatar">
                         </div>
                     </div>
                     <p class="text-center text-danger">{{ avatar.errors.file }}</p>
                     <div class="mt-3 d-flex justify-content-center">
-                        <label for="avatar" class="btn btn-primary">
+                        <label for="avatar" :class="[{ 'btn': true, 'btn-primary': true, 'loading': avatar.processing }]">
                             <div v-if="avatar.processing">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                     Updating...
                             </div>
                             <span v-else>Change Avatar</span>
-
                         </label>
                         <input type="file" id="avatar" style="display: none;" @change="uploadImage">
                     </div>

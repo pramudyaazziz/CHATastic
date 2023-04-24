@@ -38,8 +38,12 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                             we just emailed to you? If you didn't receive the email make sure to check spam section as well!</p>
                         <form @submit.prevent="submit">
                             <div class="mt-4 d-flex justify-content-between">
-                                <button class="btn btn-primary">
-                                    Resend Verification Email
+                                <button :class="[{ 'btn': true, 'btn-primary': true, 'loading': form.processing }]">
+                                    <div v-if="form.processing">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Sending...
+                                    </div>
+                                    <span v-else>Resend Verification Email</span>
                                 </button>
 
                                 <Link
