@@ -15,7 +15,7 @@
                         <p class="text-muted">Forgot your password? <br> No problem. Just let us know your email address and we will email you a password reset
                             link that will allow you to make new password.</p>
                         <form @submit.prevent="submit">
-                            <div class="mb-3">
+                            <div class="mb-3 mt-4">
                                 <label class="form-label">Email address</label>
                                 <input type="email" autofocus :class="[{ 'is-invalid': form.errors.email, 'form-control': true, 'is-valid': status }]" v-model="form.email">
                                 <div class="invalid-feedback">{{ form.errors.email }}</div>

@@ -3,6 +3,8 @@ import './bootstrap';
 import 'bootstrap';
 import '../css/bootstrap.css';
 import '../css/custom.css';
+import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';

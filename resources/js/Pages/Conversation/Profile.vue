@@ -1,5 +1,5 @@
 <script setup>
-    import MainLayout from '@/Layouts/MainLayout.vue';
+    import ProfileLayout from '@/Layouts/ProfileLayout.vue';
     import {Head, Link, useForm, usePage} from '@inertiajs/vue3';
     import {ref} from 'vue';
 
@@ -40,7 +40,7 @@
 
 <template>
     <Head title="Profile" />
-    <MainLayout>
+    <ProfileLayout>
         <div class="profile">
             <div class="row">
                 <div class="col">
@@ -51,7 +51,7 @@
                     </div>
                     <p class="text-center text-danger">{{ avatar.errors.file }}</p>
                     <div class="mt-3 d-flex justify-content-center">
-                        <label for="avatar" :class="[{ 'btn': true, 'btn-primary': true, 'loading': avatar.processing }]">
+                        <label for="avatar" :class="[{ 'btn btn-primary': true, 'loading': avatar.processing }]">
                             <div v-if="avatar.processing">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                     Updating...
@@ -126,5 +126,5 @@
                 </div>
             </form>
         </div>
-    </MainLayout>
+    </ProfileLayout>
 </template>
