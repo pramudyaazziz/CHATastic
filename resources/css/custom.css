@@ -138,6 +138,11 @@ img {
     cursor: pointer;
 }
 
+.chat-user .chat {
+    width: 100%;
+    overflow: hidden;
+}
+
 .avatar-chat-user {
     width: 55px;
     height: 55px;
@@ -148,11 +153,17 @@ img {
 
 .name-chat-user {
     font-size: 15px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
-.chat-history .chat .last-message {
+.last-message {
     font-weight: 400;
     font-size: small;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .unread-message {
@@ -359,7 +370,7 @@ img {
 
 .is-my-message {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     color: white;
 }
 
@@ -390,7 +401,7 @@ img {
 
 .close-interlocutor-profile-button {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 .close-interlocutor-profile-button i {

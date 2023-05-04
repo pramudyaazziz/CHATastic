@@ -6,7 +6,7 @@
         <div class="col chat p-2 ms-2">
             <div class="d-flex text-white h-100 flex-column justify-content-center">
                 <h6 class="name-chat-user">Migle's</h6>
-                <p class="last-message">Ah.. i'm fine thankyou</p>
+                <p class="last-message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, in.</p>
             </div>
         </div>
         <!-- <div class="col-2 d-flex justify-content-end">
