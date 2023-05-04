@@ -1,11 +1,11 @@
 <template>
    <GuestLayout>
         <Head title="Login" />
-        <div class="col-md-6 p-5 d-flex align-items-center">
+        <div class="col-md-6 p-5 d-md-flex d-none align-items-center">
             <img :src="image" alt="welcome" class="img-fluid">
         </div>
-        <div class="col-md-6 p-4">
-            <div class="card h-100 shadow">
+        <div class="col-md-6 p-4 d-flex align-items-center">
+            <div class="card shadow w-100">
                 <div class="card-body d-flex align-items-center">
                     <div class="col p-4">
                         <h5>Welcome to</h5>

@@ -2,18 +2,18 @@
     <GuestLayout>
         <Head title="Forgot Password" />
 
-        <div class="col-md-6 p-5 d-flex align-items-center">
+        <div class="col-md-6 p-5 align-items-center d-none d-md-flex">
             <img :src="image" alt="welcome" class="img-fluid">
         </div>
-        <div class="col-md-6 p-4">
-            <div class="card h-100 shadow">
+        <div class="col-md-6 p-4 d-flex align-items-center">
+            <div class="card shadow w-100">
                 <div class="card-body d-flex align-items-center">
                     <div class="col p-4">
                         <h5>Reset</h5>
                         <h3 class="text-primary fw-bold">Password</h3>
                         <hr>
-                        <p class="text-muted">Forgot your password? <br> No problem. Just let us know your email address and we will email you a password reset
-                            link that will allow you to make new password.</p>
+                        <span class="text-muted">Forgot your password? <br> No problem. Just let us know your email address and we will email you a password reset
+                            link that will allow you to make new password.</span>
                         <form @submit.prevent="submit">
                             <div class="mb-3 mt-4">
                                 <label class="form-label">Email address</label>

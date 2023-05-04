@@ -24,18 +24,18 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
     <GuestLayout>
         <Head title="Email Verification" />
 
-        <div class="col-md-6 p-5 d-flex align-items-center">
+        <div class="col-md-6 p-5 d-md-flex d-none align-items-center">
             <img :src="image" alt="locked" class="img-fluid">
         </div>
-        <div class="col-md-6 p-4">
-            <div class="card h-100 shadow">
+        <div class="col-md-6 p-4 d-flex align-items-center">
+            <div class="card shadow w-100">
                 <div class="card-body d-flex align-items-center">
                     <div class="col p-4">
                         <h5>Verify</h5>
                         <h3 class="text-primary fw-bold">Email</h3>
                         <hr>
-                        <p class="text-muted">Thanks for signing up! You could verify your email address by clicking on the link
-                            we just emailed to you? If you didn't receive the email make sure to check spam section as well!</p>
+                        <span class="text-muted">Thanks for signing up! You could verify your email address by clicking on the link
+                            we just emailed to you? If you didn't receive the email make sure to check spam section as well!</span>
                         <form @submit.prevent="submit">
                             <div class="mt-4 d-flex justify-content-between">
                                 <button :class="[{ 'btn': true, 'btn-primary': true, 'loading': form.processing }]">
