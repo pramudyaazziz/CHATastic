@@ -15,6 +15,7 @@
 </script>
 
 <template>
+
     <div :class="[{'new-chat d-flex flex-row-reverse': true, 'clicked': clicked}]">
         <div class="btn-new-chat"  @click="toggleClicked">
             <i class="bi bi-plus text-primary fs-1"></i>

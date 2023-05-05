@@ -1,0 +1,13 @@
+<template>
+    <div class="twitter">
+        <a :href="target-url" target="_blank">
+            <img :src=" url + '/assets/icon/twitter.svg'" alt="tw">
+        </a>
+    </div>
+</template>
+
+<script>
+    export default {
+        props: ['url', 'target-url']
+    }
+</script>
