@@ -96,7 +96,7 @@
                         </div>
                     </div>
                     <div class="col-md-6 px-5">
-                        <h3 class="mb-3">Link another platform</h3>
+                        <h3 class="mb-3">Add social media</h3>
                         <div class="mb-3">
                             <label for="nameInput" class="form-label">Facebook</label>
                             <input type="text" :class="[{ 'is-invalid': form.errors.facebook, 'form-control': true }]" id="nameInput" v-model="form.facebook" placeholder="Facebook url">

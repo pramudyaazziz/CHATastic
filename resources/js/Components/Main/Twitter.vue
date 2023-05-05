@@ -1,6 +1,6 @@
 <template>
     <div class="twitter">
-        <a :href="target-url" target="_blank">
+        <a :href="username" target="_blank">
             <img :src=" url + '/assets/icon/twitter.svg'" alt="tw">
         </a>
     </div>
@@ -8,6 +8,6 @@
 
 <script>
     export default {
-        props: ['url', 'target-url']
+        props: ['url', 'username']
     }
 </script>
