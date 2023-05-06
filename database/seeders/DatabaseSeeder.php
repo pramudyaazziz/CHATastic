@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Conversation::factory(1)->create();
         \App\Models\Message::factory(5)->create();
+        \App\Models\Platform::factory(3)->create();
     }
 }
