@@ -6,6 +6,7 @@
     import SearchMessage from "@/Components/Main/SearchMessage.vue";
     import NewChat from "@/Components/Main/NewChat.vue";
     import ChatUser from "@/Components/Main/ChatUser.vue";
+    import NoChatUser from "@/Components/Main/NoChatUser.vue";
     import Interlocutor from "@/Components/Main/Interlocutor.vue";
     import Message from "@/Components/Main/Message.vue";
     import FormSendMessage from "@/Components/Main/FormSendMessage.vue";
@@ -37,11 +38,12 @@
         <div :class="[{'col-md-3 p-0': true, 'd-none': conversationData && isMobile}]">
             <CurrentUser :user="user" />
             <div class="conversation-history bg-primary">
-                <SearchMessage/>
+                <SearchMessage :chat-history="chatHistory" @filtered-chat-history="handleFilterChatHistory"/>
                 <div class="chat-history">
-                    <ChatUser @open-conversation="openConversation" :url="mainUrl"/>
+                    <ChatUser @open-conversation="openConversation" :url="mainUrl" v-for="chat in (filteredChatHistories != null ? filteredChatHistories : chatHistory)" :chatUser="chat"/>
+                    <NoChatUser v-if="chatHistory.length === 0"/>
                 </div>
-                <NewChat/>
+                <NewChat :url="mainUrl"/>
             </div>
         </div>
         <div :class="[{'col p-0 conversation-area': true, 'd-none': profileData && isMobile}]">
@@ -63,12 +65,19 @@
 
 <script>
     export default {
+        props: {
+            chatHistory: {
+                type: Object,
+                required: true
+            }
+        },
         data() {
             return {
                 conversationId: null,
                 conversationData: null,
                 profileId: null,
                 profileData: null,
+                filteredChatHistories: null,
                 messages: [
                     {
                         id: 1,
@@ -99,6 +108,9 @@
             },
             closeProfile() {
                 this.profileData = null
+            },
+            handleFilterChatHistory(chat) {
+                this.filteredChatHistories = chat
             }
         }
     }

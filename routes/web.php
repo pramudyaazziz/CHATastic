@@ -21,6 +21,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('update.profile');
     Route::post('profile/avatar', [ProfileController::class, 'avatar'])->name('avatar.update');
+
+    // Fetch user by username for new Message feature
+    Route::get('/users/get', [ConversationController::class, 'getUser'])->name('chat.new');
 });
 
 require __DIR__.'/auth.php';

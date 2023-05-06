@@ -238,7 +238,7 @@ img {
 .result-input {
     z-index: 1;
     position: absolute;
-    height: 150px;
+    max-height: 150px;
     border-radius: 12px;
     left: 0px;
     right: 0px;

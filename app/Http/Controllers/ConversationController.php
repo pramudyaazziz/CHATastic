@@ -2,14 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\ConversationRepository;
+use Illuminate\Http\Request;
 
 class ConversationController extends Controller
 {
+    protected $conversation;
+
+    public function __construct(ConversationRepository $conversation)
+    {
+        $this->conversation = $conversation;
+    }
+
     public function index()
     {
-        return Inertia::render('Conversation/Main');
+        return Inertia::render('Conversation/Main', [
+            'chatHistory' => $this->conversation->getChatHistory()
+        ]);
+    }
+
+    public function getUser(Request $request)
+    {
+        $users = $this->conversation->getUserbyUsername($request->username);
+
+        return response()->json([
+            'users' => $users
+        ], 200);
     }
 }
