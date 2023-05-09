@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AvatarRequest;
+use App\Http\Requests\PersonalProfileRequest;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -18,19 +20,20 @@ class ProfileController extends Controller
      */
     public function edit(): Response
     {
+        $user = Auth::user();
+        $user->platform;
+
         return Inertia::render('Conversation/Profile', [
             'status' => session('status'),
-            'user' => User::find(Auth::user()->id)->load('platform'),
+            'user' => $user,
         ]);
     }
 
     /**
      * Update the user's avatar.
      */
-    public function avatar(Request $request)
+    public function avatar(AvatarRequest $request)
     {
-        $request->validate(['file' => 'required|mimes:png,jpg|max:2048']);
-
         $default = $request->user()->avatar == 'default.png';
         $file = $request->file('file');
         if ($default) {
@@ -43,30 +46,35 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Update the user's personal profile information.
      */
-    public function update(Request $request): RedirectResponse
+    public function updatePersonal(PersonalProfileRequest $request): RedirectResponse
     {
-        $user = User::find(Auth::user()->id);
+        Auth::user()->update($request->all());
+
+        session()->flash('status', 'Personal profile has been updated.');
+
+        return Redirect::route('profile.edit');
+    }
+
+      /**
+     * Update the user's social media profile.
+     */
+    public function updateSocial(Request $request)
+    {
         $request->validate([
-            'name' => 'required',
-            'username' => 'required|unique:users,username,' . $user->id,
             'facebook' => 'nullable|active_url',
-            'phone_number' => 'nullable|numeric|digits_between:11,13|unique:users,username,' . $user->id,
-            'bio' => 'required|max:100',
         ]);
 
         if ($request->twitter || $request->facebook || $request->instagram) {
-            $user->platform()->update([
+            Auth::user()->platform()->update([
                 'twitter' => $request->twitter,
                 'facebook' => $request->facebook,
                 'instagram' => $request->instagram,
             ]);
         }
 
-        $user->update($request->all());
-
-        session()->flash('status', 'Profile has been updated successfully.');
+        session()->flash('status', 'Social Media has been updated.');
 
         return Redirect::route('profile.edit');
     }

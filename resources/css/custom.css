@@ -30,13 +30,13 @@ p, h1, h2, h3, h4, h5, h6 {
     box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.25);
 }
 
+.title-nav a{
+    text-decoration: none;
+}
+
 .text-title {
     font-weight: 700;
     font-size: 28px;
-}
-
-.profile {
-    height: 90vh;
 }
 
 .container-image-profile {
@@ -375,15 +375,22 @@ img {
 }
 
 .message-content {
-    max-width: 50%;
+    max-width: 80%;
     width: fit-content;
-    border-radius: 7px;
 }
 
 .message-time {
     font-size: 14px;
     font-weight: 400;
     color: #717171;
+}
+
+.message .is-my-message .message-content {
+    border-radius: 10px 10px 0px 10px;
+}
+
+.message .not-my-message .message-content {
+    border-radius: 10px 10px 10px 0px;
 }
 
 .message .is-my-message ~ .message-time {
@@ -411,6 +418,8 @@ img {
 .interlocutor-profile-avatar {
     width: 200px;
     height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
 }
 
 .interlocutor-user-bio {
