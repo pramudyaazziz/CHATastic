@@ -5,7 +5,7 @@
                 {{ message.body }}
             </div>
         </div>
-        <p class="message-time my-1">{{ message.created_at }}</p>
+        <p class="message-time my-1">{{ message.time }}</p>
     </div>
 </template>
 

@@ -39,6 +39,9 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verified_at',
+        'created_at',
+        'updated_at'
     ];
 
     /**
@@ -57,6 +60,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function platform()
     {
-        return $this->hasOne(Platform::class, 'user_id', 'id');
+        return $this->hasOne(Platform::class, 'user_id', 'id')
+                        ->select(['facebook', 'twitter', 'instagram']);
     }
 }

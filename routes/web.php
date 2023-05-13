@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Conversation;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Fetch user profile
     Route::get('/user/profile/{user}', [ConversationController::class, 'getProfile'])->name('profile.detail');
+
+    // Store message with conversation
+    Route::post('/message/{conversation}', [ConversationController::class, 'storeMessageConversation'])->name('store.message.conversation');
+
+    // Store message without conversation
+    Route::post('/message/{interlocutor}', [ConversationController::class, 'storeMessageInterlocutor'])->name('store.message.interlocutor');
 });
 
 require __DIR__.'/auth.php';

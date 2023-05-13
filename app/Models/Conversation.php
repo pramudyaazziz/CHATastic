@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Conversation extends Model
 {
@@ -23,6 +24,9 @@ class Conversation extends Model
 
     public function unreadMessages()
     {
-        return $this->hasMany(Message::class)->select(['id', 'body', 'is_read'])->where('is_read', false);
+        return $this->hasMany(Message::class)
+                        ->select(['id', 'body', 'is_read'])
+                        ->where('is_read', false)
+                        ->where('from_id', '<>' , Auth::user()->id);
     }
 }

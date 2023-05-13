@@ -1,6 +1,6 @@
 <template>
     <div class="facebook">
-        <a :href="target-url" target="_blank">
+        <a :href="profileUrl" target="_blank">
             <img :src=" url + '/assets/icon/facebook.svg'" alt="fb">
         </a>
     </div>
@@ -8,6 +8,6 @@
 
 <script>
     export default {
-        props: ['url', 'target-url']
+        props: ['url', 'profileUrl']
     }
 </script>

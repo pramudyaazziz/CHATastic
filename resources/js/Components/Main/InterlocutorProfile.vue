@@ -6,44 +6,32 @@
 
 <template>
     <div class="d-flex flex-column justify-content-between align-items-center my-3">
-        <div class="interlocutor-profile-avatar p-3">
-            <img :src=" url + '/avatars/default.png'" alt="interlocutor_ava">
+        <div class="interlocutor-profile-avatar mb-3">
+            <img :src="interlocutorProfile.avatar" alt="interlocutor_ava">
         </div>
         <div class="interlocutor-profile-info ps-3 pe-3 pb-3">
-            <h5 class="text-center interlocutor-user-name">Migle's</h5>
-            <p class="text-center interlocutor-user-username mt-1"><small class="text-muted">@meig.sle</small></p>
-            <p class="text-center interlocutor-user-bio mt-3">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m</p>
+            <h5 class="text-center interlocutor-user-name">{{ interlocutorProfile.name }}</h5>
+            <p class="text-center interlocutor-user-username mt-1"><small class="text-muted">@{{ interlocutorProfile.username }}</small></p>
+            <p class="text-center interlocutor-user-bio mt-3">{{ interlocutorProfile.bio }}</p>
         </div>
         <div class="interlocutor-profile-social-media p-3">
-            <div class="facebook">
-                <a href="">
-                    <img src="http://127.0.0.1:8000/assets/icon/facebook.svg" alt="fb">
-                </a>
-            </div>
-            <div class="twitter">
-                <a href="">
-                    <img src="http://127.0.0.1:8000/assets/icon/twitter.svg" alt="tw">
-                </a>
-            </div>
-            <div class="instagram">
-                <a href="">
-                    <img src="http://127.0.0.1:8000/assets/icon/instagram.svg" alt="ig">
-                </a>
-            </div>
+            <Facebook v-if="interlocutorProfile.platform.facebook" :url="url" :profileUrl="interlocutorProfile.platform.facebook"/>
+            <Twitter v-if="interlocutorProfile.platform.twitter" :url="url" :username="interlocutorProfile.platform.twitter"/>
+            <Instagram v-if="interlocutorProfile.platform.instagram" :url="url" :username="interlocutorProfile.platform.instagram"/>
         </div>
     </div>
     <div class="interlocutor-profile-contact p-3">
-        <div class="contact-number">
+        <div class="contact-number" v-if="interlocutorProfile.phone_number">
             <div class="contact-icon">
                 <i class="bi bi-phone fs-3 text-muted"></i>
             </div>
-            <span class="text-muted">0839883883</span>
+            <span class="text-muted">{{ interlocutorProfile.phone_number }}</span>
         </div>
         <div class="contact-email">
             <div class="contact-icon">
                 <i class="bi bi-envelope fs-3 text-muted"></i>
             </div>
-            <span class="text-muted">mrfuncyxd@gmail.com</span>
+            <span class="text-muted">{{ interlocutorProfile.email }}</span>
         </div>
     </div>
 </template>
@@ -51,6 +39,10 @@
 <script>
     export default {
         props: {
+            interlocutorProfile: {
+                type: Object,
+                require: true
+            },
             url: {
                 type: String,
                 require: true

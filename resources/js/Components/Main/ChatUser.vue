@@ -1,7 +1,7 @@
 <template>
-    <div class="d-flex px-4 py-2 chat-user mb-3" @click="$emit('open-conversation')">
+    <div class="d-flex px-4 py-2 chat-user mb-3" @click="$emit('open-conversation', chatUser.id)" :title="chatUser.last_message">
         <div class="col-3 avatar-chat-user">
-            <img :src=" url + '/avatars/' + chatUser.interlocutor.avatar" alt="avatar">
+            <img :src=" chatUser.interlocutor.avatar" alt="avatar">
         </div>
         <div class="col chat p-2 ms-2">
             <div class="d-flex text-white h-100 flex-column justify-content-center">

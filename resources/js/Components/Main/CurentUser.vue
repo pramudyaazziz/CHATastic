@@ -1,5 +1,5 @@
 <script setup>
-    import { Link, router} from "@inertiajs/vue3";
+    import { Link, router, useForm} from "@inertiajs/vue3";
     const props = defineProps({
         user: {
             type: Object,
@@ -9,6 +9,12 @@
 
     const toProfile = () => {
         router.visit('/profile')
+    }
+
+    const form = useForm({});
+
+    const logOut = () => {
+        form.post(route('logout'))
     }
 </script>
 
@@ -31,7 +37,7 @@
             </div>
             <ul class="dropdown-menu">
                 <li><Link class="dropdown-item" :href="route('profile.edit')">Profile</Link></li>
-                <li><Link class="dropdown-item text-danger" :href="route('logout')" method="post">Logout</Link></li>
+                <li class="dropdown-item text-danger" @click="logOut">Logout</li>
             </ul>
         </div>
     </div>

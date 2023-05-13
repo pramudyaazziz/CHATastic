@@ -1,5 +1,77 @@
+<script setup>
+import { useForm } from '@inertiajs/vue3';
+// import { defineEmits, watch } from 'vue';
+import axios from 'axios';
+
+const props = defineProps({
+    user: {
+        type: Object,
+        required: true
+    },
+    interlocutor: {
+        type: Object,
+        required: true
+    },
+    conversation: {
+        type: Object,
+        default: null
+    },
+});
+
+const message = useForm({
+    text: null,
+    images: null,
+    document: null
+});
+
+// watch(() => message.text, val => {
+//     if (val == null || val == '') {
+//         emit('not-typing')
+//     }
+// })
+
+const emit = defineEmits(['new-message', 'typing', 'not-typing']);
+
+const sendMessageWithConversation = (conversation) => {
+    axios.post(route('store.message.conversation', conversation.id), message)
+        .then(({data}) => {
+            emit('new-message', data)
+        })
+        .catch(error => console.log(error))
+        .finally(() => {
+            message.reset();
+            emit('not-typing')
+        })
+}
+
+const sendMessageWithoutConversation = () => {
+    console.log('test')
+}
+
+const typing = () => {
+    if (message.text == null || message.text == '') {
+        emit('not-typing')
+    } else {
+        emit('typing')
+    }
+}
+
+const submit = (conversation) => {
+    // Check if no text message or attachment
+    if (message.text || message.images || message.document) {
+        // Check has conversation
+        if (conversation) {
+            sendMessageWithConversation(conversation)
+        } else {
+            sendMessageWithoutConversation()
+        }
+    }
+}
+
+</script>
+
 <template>
-    <form :action="action" @submit.prevent>
+    <form @submit.prevent="submit(conversation)">
         <div class="send-message">
             <div class="input-group flex-nowrap">
                 <div class="dropup">
@@ -16,7 +88,7 @@
                         </li>
                     </ul>
                 </div>
-                <input type="text" class="form-control shadow-none" placeholder="Type a message here..." >
+                <input type="text" class="form-control shadow-none" v-model="message.text" placeholder="Type a message here..." @input="typing">
             </div>
             <button type="submit" class="send-button bg-primary">
                 <i class="icon-send"></i>
@@ -24,14 +96,3 @@
         </div>
     </form>
 </template>
-
-<script>
-    export default {
-        props: {
-            action: {
-                type: String,
-                required: true
-            }
-        }
-    }
-</script>

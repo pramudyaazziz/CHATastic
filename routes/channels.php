@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Conversation;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -15,4 +16,9 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
+});
+
+Broadcast::channel('message.{conversation}', function ($user,Conversation $conversation) {
+    $conversationMember = [$conversation->user_one, $conversation->user_two];
+    return in_array($user->id, $conversationMember);
 });

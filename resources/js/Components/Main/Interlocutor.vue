@@ -7,13 +7,14 @@
         <div :class="[{'close-conversation': true, 'd-none': !isMobile}]">
             <CloseConversationButton @close-conversation="$emit('close-conversation')"/>
         </div>
-        <div class="avatar" @click="$emit('open-profile')">
-            <img :src="url + '/avatars/default.png'" alt="user_ava">
+        <div class="avatar" @click="$emit('open-profile', interlocutor.username)">
+            <img :src="interlocutor.avatar" alt="user_ava">
         </div>
         <div class="user">
             <div class="name">
-                <h6 class="mb-1">Migle's</h6>
-                <small class=" text-primary">Online</small>
+                <h6 class="mb-1">{{ interlocutor.name }}</h6>
+                <small class="text-primary" v-if="isTyping">Typing...</small>
+                <small class="text-primary" v-else>Online</small>
             </div>
         </div>
     </div>
@@ -26,8 +27,12 @@
                 type: Boolean,
                 required: true
             },
-            url: {
-                type: String,
+            interlocutor: {
+                type: Object,
+                required: true
+            },
+            isTyping: {
+                type: Boolean,
                 required: true
             }
         }

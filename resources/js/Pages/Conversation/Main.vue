@@ -40,7 +40,7 @@
             <div class="conversation-history bg-primary">
                 <SearchMessage :chat-history="chatHistory" @filtered-chat-history="handleFilterChatHistory"/>
                 <div class="chat-history">
-                    <ChatUser @open-conversation="openConversation" :url="mainUrl" v-for="chat in (filteredChatHistories != null ? filteredChatHistories : chatHistory)" :chatUser="chat"/>
+                    <ChatUser @open-conversation="openConversation" v-for="chat in (filteredChatHistories != null ? filteredChatHistories : chatHistory)" :chatUser="chat"/>
                     <NoChatUser v-if="chatHistory.length === 0"/>
                 </div>
                 <NewChat :url="mainUrl"/>
@@ -48,22 +48,23 @@
         </div>
         <div :class="[{'col p-0 conversation-area': true, 'd-none': profileData && isMobile}]">
             <div v-if="conversationData" class="h-100">
-                <Interlocutor @open-profile="openProfile()" @close-conversation="closeConversation()" :is-mobile="isMobile" :url="mainUrl"/>
-                <div class="chat-area p-4">
-                    <Message v-for="message in messages" :key="message.id" :user="user" :message="message"/>
+                <Interlocutor @open-profile="openProfile" @close-conversation="closeConversation()" :is-mobile="isMobile" :interlocutor="conversationData.interlocutor" :is-typing="typing"/>
+                <div class="chat-area p-4 messages-container" ref="messagesContainer">
+                    <Message v-for="message in conversationData.messages" :key="message.id" :user="user" :message="message"/>
                 </div>
-                <FormSendMessage :action="''"/>
+                <FormSendMessage :user="user" :interlocutor="conversationData.interlocutor" :conversation="conversationData" @new-message="handleNewMessage" @typing="handleTyping" @not-typing="handleNotTyping"/>
             </div>
         </div>
         <div :class="[{'col-md-3 interlocutor-profile p-3': true}]" v-if="profileData">
             <CloseInterlocutorProfileButton @close-profile="closeProfile()"/>
-            <InterlocutorProfile :url="mainUrl"/>
+            <InterlocutorProfile :interlocutor-profile="profileData" :url="mainUrl"/>
         </div>
     </MainLayout>
 </template>
 
 
 <script>
+import axios from "axios";
     export default {
         props: {
             chatHistory: {
@@ -75,42 +76,96 @@
             return {
                 conversationId: null,
                 conversationData: null,
-                profileId: null,
+                profileUsername: null,
                 profileData: null,
                 filteredChatHistories: null,
-                messages: [
-                    {
-                        id: 1,
-                        from_id: 5,
-                        to_id: 2,
-                        body: 'Hei apakabar?',
-                        created_at: 'Today 02:44'
-                    },
-                    {
-                        id: 2,
-                        from_id: 2,
-                        to_id: 5,
-                        body: 'Kerja Bagus',
-                        created_at: 'Today 02:46'
-                    }
-                ]
+                channel: null,
+                typing: false
             }
         },
         methods: {
             openConversation(id) {
-                this.conversationData = 'ada'
+                this.conversationId = id;
+                this.profileData = null;
+                this.profileUsername = null;
             },
             closeConversation() {
-                this.conversationData = null
+                this.conversationData = null;
+                this.conversationId = null;
             },
-            openProfile(id) {
-                this.profileData = 'ada'
+            openProfile(username) {
+                this.profileUsername = username;
             },
             closeProfile() {
-                this.profileData = null
+                this.profileData = null;
+                this.profileUsername = null;
             },
             handleFilterChatHistory(chat) {
-                this.filteredChatHistories = chat
+                this.filteredChatHistories = chat;
+            },
+            handleNewMessage(data) {
+                this.conversationData.messages.push(data);
+                this.$nextTick(() => {
+                    this.scrollToBottom();
+                });
+            },
+            handleTyping() {
+                this.channel.whisper('clients-typing', {
+                    typing: true
+                })
+            },
+            handleNotTyping() {
+                this.channel.whisper('clients-typing', {
+                    typing: false
+                })
+            },
+            scrollToBottom() {
+                const container = this.$refs.messagesContainer;
+                if (container) {
+                    container.scrollTop = container.scrollHeight;
+                }
+            }
+        },
+        watch: {
+            conversationId() {
+                if (this.conversationId) {
+                    axios.get( route('conversation.show', this.conversationId))
+                        .then(response => {
+                            const {conversation} = response.data;
+                            this.conversationData = conversation
+                            this.$nextTick(() => {
+                                this.scrollToBottom();
+                            });
+                        })
+                        .catch(err => console.log(err));
+
+
+                    // Listen private message channel
+
+                    this.channel = Echo.private('message.' + this.conversationId);
+                    this.channel.listen('NewMessage', ({message}) => {
+                                    this.conversationData.messages.push(message)
+                                    this.$nextTick(() => {
+                                        this.scrollToBottom();
+                                    });
+                                });
+                    this.channel.listenForWhisper('clients-typing', ({typing}) => {
+                        this.typing = typing
+                    });
+                }
+
+                if (!this.conversationId) {
+                    this.channel.stopListening('NewMessage');
+                }
+            },
+            profileUsername() {
+                if (this.profileUsername) {
+                    axios.get( route('profile.detail', this.profileUsername))
+                        .then(response => {
+                            this.profileData = response.data
+                        })
+                        .catch( err => console.log(err))
+                }
             }
         }
     }
