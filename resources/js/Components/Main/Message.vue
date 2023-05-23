@@ -5,7 +5,8 @@
                 {{ message.body }}
             </div>
         </div>
-        <p class="message-time my-1">{{ message.time }}</p>
+        <p class="message-time my-1" v-if="message.time">{{ message.time }}</p>
+        <p class="message-time my-1" v-else>Sending...</p>
     </div>
 </template>
 

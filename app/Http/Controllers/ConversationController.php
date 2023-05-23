@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NewMessage;
+use App\Events\Conversation as EventsConversation;
+use App\Events\NewMessageEvent;
 use App\Models\Conversation;
+use App\Models\Message;
 use Inertia\Inertia;
 use App\Repositories\ConversationRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\MessageRepository;
 use Illuminate\Http\Request;
+use App\Events\ConversationEvent;
 use Illuminate\Support\Facades\Auth;
 
 class ConversationController extends Controller
@@ -69,9 +72,23 @@ class ConversationController extends Controller
         if ($request->text) {
             $msg = $this->message->storeMessage($request, $conversation);
             $message = $this->message->formatMessage($msg);
-            broadcast(new NewMessage($message))->toOthers();
+            broadcast(new NewMessageEvent($message))->toOthers();
+            broadcast(new ConversationEvent($message));
             return response()->json($message);
         }
 
+    }
+
+    public function markAsRead(Message $message)
+    {
+        $msg = $this->message->markAsRead($message);
+        return response()->json($msg, 200);
+    }
+
+    public function chatHistory()
+    {
+        $chatHistory = $this->conversation->getChatHistory();
+
+        return response()->json($chatHistory, 200);
     }
 }

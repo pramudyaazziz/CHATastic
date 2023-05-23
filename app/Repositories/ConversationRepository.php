@@ -5,13 +5,23 @@ use App\Models\Conversation;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Events\ConversationEvent;
 
 class ConversationRepository
 {
     public function getChatHistory()
     {
-        $chatHistory = Conversation::where('user_one', Auth::user()->id)
+        $chatHistory = Conversation::leftJoin('messages', function ($join) {
+                $join->on('conversations.id', '=', 'messages.conversation_id')
+                    ->whereRaw('messages.created_at = (
+                        SELECT MAX(created_at) FROM messages WHERE messages.conversation_id = conversations.id
+                    )');
+            })
+            ->where('user_one', Auth::user()->id)
             ->orWhere('user_two', Auth::user()->id)
+            ->orderByRaw('
+                (SELECT MAX(created_at) FROM messages WHERE messages.conversation_id = conversations.id) DESC
+            ')
             ->get()
             ->map(function ($conversation) {
                 return $this->formatChatHistory($conversation);
@@ -32,12 +42,11 @@ class ConversationRepository
     private function formatChatHistory($conversation)
     {
         $interlocutor_id = $this->getInterlocutorId($conversation);
-
         return [
-            'id' => $conversation->id,
+            'id' => $conversation->conversation_id,
             'interlocutor' => $this->getInterlocutorById($interlocutor_id),
-            'last_message' => $conversation->lastMessage->body,
-            'unread_messages' => count($conversation->unreadMessages)
+            'last_message' => $conversation->body,
+            'unread_messages' => count(Conversation::find($conversation->conversation_id)->unreadMessages)
         ];
     }
 

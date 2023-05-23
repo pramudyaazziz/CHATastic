@@ -18,7 +18,7 @@ class ConversationMember
     public function handle(Request $request, Closure $next): Response
     {
         $conversationId = $request->route('conversation');
-
+        
         try {
 
             $conversation = Conversation::findOrFail($conversationId);

@@ -1,7 +1,7 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-// import { defineEmits, watch } from 'vue';
 import axios from 'axios';
+import { throttle } from 'lodash';
 
 const props = defineProps({
     user: {
@@ -30,9 +30,16 @@ const message = useForm({
 //     }
 // })
 
-const emit = defineEmits(['new-message', 'typing', 'not-typing']);
+const emit = defineEmits(['new-message', 'send-new-message', 'typing', 'not-typing']);
 
-const sendMessageWithConversation = (conversation) => {
+const sendMessageWithConversation = (conversation, user, interlocutor) => {
+    emit('send-new-message', {
+        'conversation_id': conversation.id,
+        'from_id': user.id,
+        'to_id': interlocutor.id,
+        'body': message.text,
+        'type': 'text',
+    });
     axios.post(route('store.message.conversation', conversation.id), message)
         .then(({data}) => {
             emit('new-message', data)
@@ -56,22 +63,22 @@ const typing = () => {
     }
 }
 
-const submit = (conversation) => {
+const submit = throttle((conversation, user, interlocutor) => {
     // Check if no text message or attachment
     if (message.text || message.images || message.document) {
         // Check has conversation
         if (conversation) {
-            sendMessageWithConversation(conversation)
+            sendMessageWithConversation(conversation, user, interlocutor)
         } else {
             sendMessageWithoutConversation()
         }
     }
-}
+}, 3000);
 
 </script>
 
 <template>
-    <form @submit.prevent="submit(conversation)">
+    <form @submit.prevent="submit(conversation, user, interlocutor)">
         <div class="send-message">
             <div class="input-group flex-nowrap">
                 <div class="dropup">

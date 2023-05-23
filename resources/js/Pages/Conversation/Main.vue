@@ -25,9 +25,6 @@
       window.removeEventListener('resize', handleResize);
     })
 
-    // Current authenticable user
-    const user = usePage().props.auth.user;
-
     // Main Url
     const mainUrl = usePage().props.ziggy.url;
 </script>
@@ -38,21 +35,21 @@
         <div :class="[{'col-md-3 p-0': true, 'd-none': conversationData && isMobile}]">
             <CurrentUser :user="user" />
             <div class="conversation-history bg-primary">
-                <SearchMessage :chat-history="chatHistory" @filtered-chat-history="handleFilterChatHistory"/>
+                <SearchMessage :chat-history="conversation" @filtered-chat-history="handleFilterChatHistory"/>
                 <div class="chat-history">
-                    <ChatUser @open-conversation="openConversation" v-for="chat in (filteredChatHistories != null ? filteredChatHistories : chatHistory)" :chatUser="chat"/>
-                    <NoChatUser v-if="chatHistory.length === 0"/>
+                    <ChatUser @open-conversation="openConversation" v-for="chat in (filteredChatHistories != null ? filteredChatHistories : conversation)" :chatUser="chat"/>
+                    <NoChatUser v-if="conversation.length === 0"/>
                 </div>
                 <NewChat :url="mainUrl"/>
             </div>
         </div>
         <div :class="[{'col p-0 conversation-area': true, 'd-none': profileData && isMobile}]">
             <div v-if="conversationData" class="h-100">
-                <Interlocutor @open-profile="openProfile" @close-conversation="closeConversation()" :is-mobile="isMobile" :interlocutor="conversationData.interlocutor" :is-typing="typing"/>
+                <Interlocutor @open-profile="openProfile" @close-conversation="closeConversation()" :is-mobile="isMobile" :interlocutor="conversationData.interlocutor" :online-user-id="onlineUserId" :is-typing="typing"/>
                 <div class="chat-area p-4 messages-container" ref="messagesContainer">
                     <Message v-for="message in conversationData.messages" :key="message.id" :user="user" :message="message"/>
                 </div>
-                <FormSendMessage :user="user" :interlocutor="conversationData.interlocutor" :conversation="conversationData" @new-message="handleNewMessage" @typing="handleTyping" @not-typing="handleNotTyping"/>
+                <FormSendMessage :user="user" :interlocutor="conversationData.interlocutor" :conversation="conversationData" @send-new-message="handleSendNewMessage" @new-message="handleNewMessage" @typing="handleTyping" @not-typing="handleNotTyping"/>
             </div>
         </div>
         <div :class="[{'col-md-3 interlocutor-profile p-3': true}]" v-if="profileData">
@@ -70,20 +67,36 @@ import axios from "axios";
             chatHistory: {
                 type: Object,
                 required: true
+            },
+            auth: {
+                type: Object,
+                required: true
             }
         },
         data() {
             return {
+                user: this.auth.user,
+                onlineUserId: [],
+                conversation: this.chatHistory,
                 conversationId: null,
                 conversationData: null,
                 profileUsername: null,
                 profileData: null,
                 filteredChatHistories: null,
                 channel: null,
-                typing: false
+                typing: {
+                    typing: false,
+                    from_id: null
+                },
             }
         },
         methods: {
+            fetchChatHistory(){
+                axios.get(route('chat.history'))
+                    .then(({data}) => {
+                        this.conversation = data
+                    });
+            },
             openConversation(id) {
                 this.conversationId = id;
                 this.profileData = null;
@@ -103,20 +116,36 @@ import axios from "axios";
             handleFilterChatHistory(chat) {
                 this.filteredChatHistories = chat;
             },
+            handleSendNewMessage(data) {
+                this.conversationData.messages.push(data)
+                this.$nextTick(() => {
+                    this.scrollToBottom();
+                });
+            },
             handleNewMessage(data) {
+                this.conversationData.messages.pop()
                 this.conversationData.messages.push(data);
                 this.$nextTick(() => {
                     this.scrollToBottom();
                 });
             },
+            markAsReadMessage(message) {
+                try {
+                    axios.get( route('mark.read', message.id))
+                } catch (error) {
+                    console.log(error);
+                }
+            },
             handleTyping() {
                 this.channel.whisper('clients-typing', {
-                    typing: true
+                    typing: true,
+                    from_id: this.user.id
                 })
             },
             handleNotTyping() {
                 this.channel.whisper('clients-typing', {
-                    typing: false
+                    typing: false,
+                    from_id: this.user.id
                 })
             },
             scrollToBottom() {
@@ -126,8 +155,31 @@ import axios from "axios";
                 }
             }
         },
+        mounted() {
+            Echo.join('conversation')
+                .here(users => {
+                    this.onlineUserId = users.map(user => user.id);
+                })
+                .joining(user => {
+                    this.onlineUserId.push(user.id)
+                })
+                .leaving(user => {
+                    this.onlineUserId = this.onlineUserId.filter(id => id !== user.id);
+                })
+                .listen('ConversationEvent', ({message}) => {
+                    let memberConversation = [message.from_id, message.to_id]
+                    if (memberConversation.includes(this.auth.user.id)) {
+                        this.fetchChatHistory();
+                    }
+                })
+        },
         watch: {
             conversationId() {
+
+                if (this.channel) {
+                    this.channel.stopListening('NewMessageEvent');
+                }
+
                 if (this.conversationId) {
                     axios.get( route('conversation.show', this.conversationId))
                         .then(response => {
@@ -143,19 +195,19 @@ import axios from "axios";
                     // Listen private message channel
 
                     this.channel = Echo.private('message.' + this.conversationId);
-                    this.channel.listen('NewMessage', ({message}) => {
+                    this.channel.listen('NewMessageEvent', ({message}) => {
                                     this.conversationData.messages.push(message)
                                     this.$nextTick(() => {
                                         this.scrollToBottom();
                                     });
+                                    this.markAsReadMessage(message);
                                 });
-                    this.channel.listenForWhisper('clients-typing', ({typing}) => {
-                        this.typing = typing
+                    this.channel.listenForWhisper('clients-typing', (data) => {
+                        this.typing = data
                     });
-                }
 
-                if (!this.conversationId) {
-                    this.channel.stopListening('NewMessage');
+                    // Fetch Chat History
+                    this.fetchChatHistory();
                 }
             },
             profileUsername() {

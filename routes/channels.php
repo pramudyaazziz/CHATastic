@@ -22,3 +22,11 @@ Broadcast::channel('message.{conversation}', function ($user,Conversation $conve
     $conversationMember = [$conversation->user_one, $conversation->user_two];
     return in_array($user->id, $conversationMember);
 });
+
+Broadcast::channel('conversation', function ($user) {
+    return (object) [
+        'id' => $user->id,
+        'name' => $user->name,
+        'username' => $user->username
+    ];
+});

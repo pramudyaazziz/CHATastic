@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Conversation;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +37,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Store message without conversation
     Route::post('/message/{interlocutor}', [ConversationController::class, 'storeMessageInterlocutor'])->name('store.message.interlocutor');
+
+    // Mark as read message
+    Route::get('/conversation/read/{message}', [ConversationController::class, 'markAsRead'])->name('mark.read');
+
+    // Fetch a new chatHistory for sidebar
+    Route::get('/my-conversation', [ConversationController::class, 'chatHistory'])->name('chat.history');
 });
 
 require __DIR__.'/auth.php';

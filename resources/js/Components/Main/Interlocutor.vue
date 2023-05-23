@@ -13,8 +13,13 @@
         <div class="user">
             <div class="name">
                 <h6 class="mb-1">{{ interlocutor.name }}</h6>
-                <small class="text-primary" v-if="isTyping">Typing...</small>
-                <small class="text-primary" v-else>Online</small>
+                <template v-if="onlineUserId.includes(interlocutor.id)">
+                    <small class="text-primary" v-if="isTyping.typing && isTyping.from_id == interlocutor.id">Typing...</small>
+                    <small class="text-primary" v-else>Online</small>
+                </template>
+                <template v-else>
+                    <small class="text-muted">Offline</small>
+                </template>
             </div>
         </div>
     </div>
@@ -31,9 +36,18 @@
                 type: Object,
                 required: true
             },
-            isTyping: {
-                type: Boolean,
+            onlineUserId: {
+                type: Array,
                 required: true
+            },
+            isTyping: {
+                type: Object,
+                required: true
+            }
+        },
+        watch: {
+            onlineUserId() {
+                console.log('hensin');
             }
         }
     }

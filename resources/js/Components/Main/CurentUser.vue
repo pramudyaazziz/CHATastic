@@ -14,6 +14,7 @@
     const form = useForm({});
 
     const logOut = () => {
+        Echo.leave('conversation');
         form.post(route('logout'))
     }
 </script>

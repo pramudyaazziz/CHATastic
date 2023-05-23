@@ -1,4 +1,5 @@
 <template>
+    
     <div class="d-flex px-4 py-2 chat-user mb-3" @click="$emit('open-conversation', chatUser.id)" :title="chatUser.last_message">
         <div class="col-3 avatar-chat-user">
             <img :src=" chatUser.interlocutor.avatar" alt="avatar">

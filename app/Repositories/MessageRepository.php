@@ -32,6 +32,15 @@ class MessageRepository
         ];
     }
 
+    public function markAsRead($message)
+    {
+        $msg = $message->update([
+            'is_read' => true
+        ]);
+
+        return $msg;
+    }
+
     private function formatDate($created_at)
     {
         if ($created_at->isToday()) {

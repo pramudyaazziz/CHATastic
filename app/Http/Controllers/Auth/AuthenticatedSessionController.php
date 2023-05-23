@@ -34,6 +34,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        Auth::user()->update(['is_online' => true]);
+
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
@@ -42,6 +44,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        Auth::user()->update([
+            'is_online' => false,
+            'last_online' => now()
+        ]);
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
