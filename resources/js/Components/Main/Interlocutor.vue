@@ -44,11 +44,6 @@
                 type: Object,
                 required: true
             }
-        },
-        watch: {
-            onlineUserId() {
-                console.log('hensin');
-            }
         }
     }
 </script>
