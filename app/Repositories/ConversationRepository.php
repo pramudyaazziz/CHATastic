@@ -67,9 +67,7 @@ class ConversationRepository
     }
 
     private function getInterlocutorById($id) {
-        $user = User::where('id', $id)
-                ->select(['id', 'name', 'avatar', 'username'])
-                ->firstOrFail();
+        $user = User::findOrFail($id);
 
         $formated = (object) [
             'id' => $user->id,

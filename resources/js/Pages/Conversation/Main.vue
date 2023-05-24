@@ -33,7 +33,7 @@
     <Head title="Conversation" />
     <MainLayout>
         <div :class="[{'col-md-3 p-0': true, 'd-none': conversationData && isMobile}]">
-            <CurrentUser :user="user" />
+            <CurrentUser :user="user" :url="mainUrl"/>
             <div class="conversation-history bg-primary">
                 <SearchMessage :chat-history="conversation" @filtered-chat-history="handleFilterChatHistory"/>
                 <div class="chat-history">

@@ -4,6 +4,10 @@
         user: {
             type: Object,
             required: true,
+        },
+        url: {
+            type: String,
+            required: true
         }
     });
 
@@ -23,7 +27,7 @@
     <div class="current-user p-3 justify-content-between" >
         <div class="d-flex justify-content-start w-100" @click="toProfile">
             <div class="avatar">
-                <img :src="'http://127.0.0.1:8000/avatars/' + user.avatar + '?time=' + new Date().getTime()" alt="user_ava">
+                <img :src="url + '/avatars/' + user.avatar + '?time=' + new Date().getTime()" alt="user_ava">
             </div>
             <div class="user">
                 <div class="name">
