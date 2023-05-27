@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('conversation_id')->unsigned()->constrained('conversations');
             $table->integer('from_id')->unsigned();
             $table->integer('to_id')->unsigned();
-            $table->string('body')->nullable();
+            $table->text('body')->nullable();
             $table->enum('type', ['text', 'images', 'document']);
             $table->boolean('is_read');
             $table->timestamps();
