@@ -1,0 +1,448 @@
+p, h1, h2, h3, h4, h5, h6 {
+    padding: 0;
+    margin: 0;
+    font-weight: 600;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0);
+    background: #007bff00;
+    -webkit-border-radius: 25px;
+    border-radius: 25x;
+}
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 25px;
+    background: rgb(255, 255, 255);
+    border-radius: 25px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+.fullscreen {
+    height: 100vh;
+}
+
+.navbar {
+    height: 10vh;
+    box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.25);
+}
+
+.title-nav a{
+    text-decoration: none;
+}
+
+.text-title {
+    font-weight: 700;
+    font-size: 28px;
+}
+
+.container-image-profile {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.loading {
+    opacity: 0.8;
+}
+
+.current-user, .interlocutor {
+    display: flex;
+    column-gap: 0.25;
+    position: relative;
+    height: 13vh;
+}
+
+.current-user div:hover {
+    cursor: pointer;
+}
+
+.avatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    align-self: center;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    margin: 0px 0px 0px 20px;
+}
+
+.dropdown {
+    display: flex;
+    align-items: center;
+}
+
+.conversation-history {
+    height: 87vh;
+    overflow-y: auto;
+    border-radius: 20px 20px 0 0;
+    position: relative;
+}
+
+.conversation-history div span , .conversation-history div .input-search {
+    border: none;
+    background: #299bff ;
+    color: white;
+    height: 55px;
+    caret-color: white;
+    box-shadow: 1px 2px 0px 1px rgba(0, 0, 0, 0.2);
+}
+
+.conversation-history div .input-search::placeholder {
+    color: white;
+}
+
+.conversation-history div .input-search {
+    background-color: #299bff;
+    color: white;
+}
+
+.conversation-history div .input-search::-webkit-search-cancel-button {
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='white' class='bi bi-x-lg' viewBox='0 0 16 16'%3E%3Cpath d='M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.search {
+    height: 14vh;
+}
+
+.chat-history {
+    height: 73vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.chat-user.selected, .chat-user:hover {
+    background-color: #238bfa;
+    cursor: pointer;
+}
+
+.chat-user .chat {
+    width: 100%;
+    overflow: hidden;
+}
+
+.avatar-chat-user {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    overflow: hidden;
+    align-self: center;
+}
+
+.name-chat-user {
+    font-size: 15px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.last-message {
+    font-weight: 400;
+    font-size: small;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.unread-message {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    color: #007AFF;
+    font-size: 14px;
+    background-color: white;
+}
+
+.new-chat {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+}
+
+.new-chat .btn-new-chat {
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    z-index: 2;
+    transition: 0.3s ease;
+    transform: rotate(0deg);
+    cursor: pointer;
+}
+
+.new-chat .btn-new-chat:hover {
+    background-color: rgb(236, 236, 236);
+}
+
+.new-chat .input-new-chat {
+    position: absolute;
+    height: 100%;
+    z-index: 1;
+    display: none !important;
+    opacity: 0;
+    width: 100%;
+}
+
+.new-chat .input-new-chat input {
+    width: 100%;
+    border-radius: 50px;
+    border: none;
+    padding: 20px;
+    outline: none;
+}
+
+/* Handle if element class .new-chat got clicked class */
+
+.new-chat.clicked .btn-new-chat {
+    transition: 0.3s ease;
+    transform: rotate(45deg);
+}
+
+.new-chat.clicked .input-new-chat {
+    display: flex !important;
+    opacity: 1;
+}
+
+/* End of handle element class .new-chat */
+
+.result-input {
+    z-index: 1;
+    position: absolute;
+    max-height: 150px;
+    border-radius: 12px;
+    left: 0px;
+    right: 0px;
+    bottom: 55px;
+    overflow-y: auto;
+}
+
+.result-input::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+.result-user {
+    width: 100%;
+    display: flex;
+}
+
+.result-user:hover {
+    background-color: #e9e9e9;
+    cursor: pointer;
+}
+
+.conversation-area {
+    background-color: #CECECE;
+}
+
+.interlocutor {
+    background-color: white;
+    box-shadow: 0 5px 8px -6px rgba(0, 0, 0, 0.5)
+}
+
+.close-conversation {
+    display: flex;
+    align-items: center;
+}
+
+.close-conversation .close-conversation-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-conversation .close-conversation-button:hover {
+    background-color: #CECECE;
+    cursor: pointer;
+}
+
+.interlocutor .avatar:hover {
+    cursor: pointer;
+}
+
+.chat-area {
+    height: 78vh;
+    overflow-y: auto;
+}
+
+.send-message {
+    height: 9vh;
+    background-color: white;
+    box-shadow: 0 -5px 8px -6px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+}
+
+.send-message .input-group {
+    position: absolute;
+    right: 20px;
+    left: 20px;
+    width: auto;
+}
+
+.send-message .input-group span.input-group-text {
+    background-color: rgb(240, 240, 240);
+    border: none;
+    border-radius: 50px 0 0 50px;
+}
+
+.send-message .input-group span.input-group-text i {
+    color: rgb(162, 162, 162);
+    rotate: 45deg;
+}
+
+.send-message .input-group span.input-group-text.show i {
+    color: #007AFF;
+}
+
+.send-message .input-group input.form-control {
+    border: none;
+    border-radius: 0 50px 50px 0;
+    background-color: rgb(240, 240, 240);
+    outline: none !important;
+    font-size: 15px;
+}
+
+.send-message .input-group input.form-control::placeholder {
+    font-size: 15px;
+}
+
+.send-message .send-button {
+    position: absolute;
+    right: 20px;
+    z-index: 5;
+    height: 40px;
+    width: 40px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: none;
+}
+
+.icon-send {
+    width: 20px;
+    height: 20px;
+    background-image: url("../../public/assets/icon/fa_send.svg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.send-message .input-group .dropup .dropdown-menu {
+    width: 200px !important;
+}
+
+.is-my-message {
+    display: flex;
+    justify-content: flex-end;
+    color: white;
+}
+
+.message-content {
+    max-width: 80%;
+    width: fit-content;
+}
+
+.message-time {
+    font-size: 14px;
+    font-weight: 400;
+    color: #717171;
+}
+
+.message .is-my-message .message-content {
+    border-radius: 10px 10px 0px 10px;
+}
+
+.message .not-my-message .message-content {
+    border-radius: 10px 10px 10px 0px;
+}
+
+.message .is-my-message ~ .message-time {
+    text-align: end;
+}
+
+.message .not-my-message ~ .message-time {
+    text-align: start;
+}
+
+.interlocutor-profile {
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.close-interlocutor-profile-button {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.close-interlocutor-profile-button i {
+    cursor: pointer;
+}
+
+.interlocutor-profile-avatar {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.interlocutor-user-bio {
+    font-size: 14px;
+    font-weight: 500;
+    color: #575757;
+}
+
+.interlocutor-profile-social-media {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.contact-number , .contact-email {
+    display: flex;
+    align-items: center;
+}
+
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
