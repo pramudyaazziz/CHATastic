@@ -70,13 +70,22 @@ class ConversationController extends Controller
     public function storeMessageConversation(Request $request, Conversation $conversation)
     {
         if ($request->text) {
-            $msg = $this->message->storeMessage($request, $conversation);
+            $msg = $this->message->storeMessageConversation($request, $conversation);
             $message = $this->message->formatMessage($msg);
-            broadcast(new NewMessageEvent($message))->toOthers();
-            broadcast(new ConversationEvent($message));
+            $this->broadcastEvent($message);
             return response()->json($message);
         }
 
+    }
+
+    public function storeMessageInterlocutor(Request $request, $interlocutor)
+    {
+        if ($request->text) {
+            $msg = $this->message->storeMessageInterlocutor($request, $interlocutor);
+            $message = $this->message->formatMessage($msg);
+            $this->broadcastEvent($message);
+            return response()->json($message);
+        }
     }
 
     public function markAsRead(Message $message)
@@ -90,5 +99,11 @@ class ConversationController extends Controller
         $chatHistory = $this->conversation->getChatHistory();
 
         return response()->json($chatHistory, 200);
+    }
+
+    private function broadcastEvent($message): void
+    {
+        broadcast(new NewMessageEvent($message))->toOthers();
+        broadcast(new ConversationEvent($message));
     }
 }

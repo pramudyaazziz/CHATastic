@@ -4,7 +4,7 @@
     import MainLayout from "@/Layouts/MainLayout.vue";
     import CurrentUser from "@/Components/Main/CurentUser.vue";
     import SearchMessage from "@/Components/Main/SearchMessage.vue";
-    import NewChat from "@/Components/Main/NewChat.vue";
+    import NewConversation from "@/Components/Main/NewConversation.vue";
     import ChatUser from "@/Components/Main/ChatUser.vue";
     import NoChatUser from "@/Components/Main/NoChatUser.vue";
     import Interlocutor from "@/Components/Main/Interlocutor.vue";
@@ -40,7 +40,7 @@
                     <ChatUser @open-conversation="openConversation" v-for="chat in (filteredChatHistories != null ? filteredChatHistories : conversation)" :chatUser="chat"/>
                     <NoChatUser v-if="conversation.length === 0"/>
                 </div>
-                <NewChat :url="mainUrl"/>
+                <NewConversation :url="mainUrl" @open-conversation="openConversation" @new-conversation="newConversation"/>
             </div>
         </div>
         <div :class="[{'col p-0 conversation-area': true, 'd-none': profileData && isMobile}]">
@@ -97,6 +97,15 @@ import axios from "axios";
                         this.conversation = data
                     });
             },
+            newConversation(interlocutor){
+                let conversation = {
+                    id: null,
+                    interlocutor: interlocutor,
+                    messages: []
+                }
+                this.conversationId = conversation.id;
+                this.conversationData = conversation;
+            },
             openConversation(id) {
                 this.conversationId = id;
                 this.profileData = null;
@@ -118,12 +127,14 @@ import axios from "axios";
             },
             handleSendNewMessage(data) {
                 this.conversationData.messages.push(data)
+                this.conversationId = data.conversation_id;
                 this.$nextTick(() => {
                     this.scrollToBottom();
                 });
             },
             handleNewMessage(data) {
-                this.conversationData.messages.pop()
+                this.conversationId = data.conversation_id
+                this.conversationData.messages.pop();
                 this.conversationData.messages.push(data);
                 this.$nextTick(() => {
                     this.scrollToBottom();
@@ -167,6 +178,7 @@ import axios from "axios";
                     this.onlineUserId = this.onlineUserId.filter(id => id !== user.id);
                 })
                 .listen('ConversationEvent', ({message}) => {
+                    console.log(message);
                     let memberConversation = [message.from_id, message.to_id]
                     if (memberConversation.includes(this.auth.user.id)) {
                         this.fetchChatHistory();

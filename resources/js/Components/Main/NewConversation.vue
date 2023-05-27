@@ -1,5 +1,4 @@
 <template>
-
     <div :class="[{'new-chat d-flex flex-row-reverse': true, 'clicked': clicked}]" title="New Chat">
         <div class="btn-new-chat"  @click="toggleClicked">
             <i class="bi bi-plus text-primary fs-1"></i>
@@ -8,7 +7,7 @@
             <input type="text" placeholder="Type username" v-model="searchUser" @input="fetchUser">
         </div>
         <div class="result-input bg-white p-2" v-if="resultUser.length">
-            <ResultUser :url="url" v-for="result in resultUser" :result="result"/>
+            <ResultUser :url="url" v-for="result in resultUser" :result="result" @click="handleClickResultUser(result)"/>
         </div>
     </div>
 </template>
@@ -50,6 +49,15 @@ import ResultUser from "./ResultUser.vue";
                 this.clicked = !this.clicked;
                 this.searchUser = null
                 this.resultUser = []
+            },
+            handleClickResultUser(user) {
+                if (user.conversation_id) {
+                    this.$emit('open-conversation', user.conversation_id)
+                } else {
+                    this.$emit('new-conversation', user)
+                }
+
+                this.toggleClicked();
             }
         }
     }

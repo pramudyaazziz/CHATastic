@@ -33,10 +33,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/user/profile/{user}', [ConversationController::class, 'getProfile'])->name('profile.detail');
 
     // Store message with conversation
-    Route::post('/message/{conversation}', [ConversationController::class, 'storeMessageConversation'])->name('store.message.conversation');
+    Route::post('/message/conversation/{conversation}', [ConversationController::class, 'storeMessageConversation'])->name('store.message.conversation');
 
     // Store message without conversation
-    Route::post('/message/{interlocutor}', [ConversationController::class, 'storeMessageInterlocutor'])->name('store.message.interlocutor');
+    Route::post('/message/interlocutor/{interlocutor}', [ConversationController::class, 'storeMessageInterlocutor'])->name('store.message.interlocutor');
 
     // Mark as read message
     Route::get('/conversation/read/{message}', [ConversationController::class, 'markAsRead'])->name('mark.read');

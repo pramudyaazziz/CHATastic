@@ -2,13 +2,15 @@
 
 namespace App\Repositories;
 
+use App\Models\Conversation;
 use Illuminate\Support\Facades\Auth;
 
 class MessageRepository
 {
-    public function storeMessage($request, $conversation)
+    public function storeMessageConversation($request, $conversation)
     {
         $message = $conversation->messages()->create([
+            'conversation_id' => $conversation,
             'from_id' => Auth::user()->id,
             'to_id' => $conversation->user_one == Auth::user()->id ? $conversation->user_two : $conversation->user_one,
             'body' => $request->text,
@@ -17,6 +19,16 @@ class MessageRepository
         ]);
 
         return $message;
+    }
+
+    public function storeMessageInterlocutor($request, int $interlocutor)
+    {
+        $conversation = Conversation::create([
+            'user_one' => Auth::user()->id,
+            'user_two' => $interlocutor
+        ]);
+
+        return $this->storeMessageConversation($request, $conversation);
     }
 
     public function formatMessage($message)

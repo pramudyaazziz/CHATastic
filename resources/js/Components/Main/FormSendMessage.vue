@@ -24,23 +24,21 @@ const message = useForm({
     document: null
 });
 
-// watch(() => message.text, val => {
-//     if (val == null || val == '') {
-//         emit('not-typing')
-//     }
-// })
-
 const emit = defineEmits(['new-message', 'send-new-message', 'typing', 'not-typing']);
 
-const sendMessageWithConversation = (conversation, user, interlocutor) => {
+const emitSendNewMessage = () => {
     emit('send-new-message', {
-        'conversation_id': conversation.id,
-        'from_id': user.id,
-        'to_id': interlocutor.id,
+        'conversation_id': props.conversation.id,
+        'from_id': props.user.id,
+        'to_id': props.interlocutor.id,
         'body': message.text,
         'type': 'text',
     });
-    axios.post(route('store.message.conversation', conversation.id), message)
+}
+
+const sendMessageWithConversation = () => {
+    emitSendNewMessage()
+    axios.post(route('store.message.conversation', props.conversation.id), message)
         .then(({data}) => {
             emit('new-message', data)
         })
@@ -51,26 +49,36 @@ const sendMessageWithConversation = (conversation, user, interlocutor) => {
         })
 }
 
-const sendMessageWithoutConversation = () => {
-    console.log('test')
+const sendMessageWithInterlocutor = () => {
+    emitSendNewMessage()
+    axios.post(route('store.message.interlocutor', props.interlocutor.id), message)
+        .then(({data}) => {
+            emit('new-message', data)
+        })
+        .catch(error => console.log(error))
+        .finally(() => {
+            message.reset();
+        })
 }
 
 const typing = () => {
-    if (message.text == null || message.text == '') {
-        emit('not-typing')
-    } else {
-        emit('typing')
+    if (props.conversation.id) {
+        if (message.text == null || message.text == '') {
+            emit('not-typing')
+        } else {
+            emit('typing')
+        }
     }
 }
 
-const submit = throttle((conversation, user, interlocutor) => {
+const submit = throttle(() => {
     // Check if no text message or attachment
     if (message.text || message.images || message.document) {
         // Check has conversation
-        if (conversation) {
-            sendMessageWithConversation(conversation, user, interlocutor)
+        if (props.conversation.id) {
+            sendMessageWithConversation()
         } else {
-            sendMessageWithoutConversation()
+            sendMessageWithInterlocutor()
         }
     }
 }, 3000);
@@ -78,7 +86,7 @@ const submit = throttle((conversation, user, interlocutor) => {
 </script>
 
 <template>
-    <form @submit.prevent="submit(conversation, user, interlocutor)">
+    <form @submit.prevent="submit()">
         <div class="send-message">
             <div class="input-group flex-nowrap">
                 <div class="dropup">
