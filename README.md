@@ -13,3 +13,8 @@ This project is still under development
 [Bootstrap 5]: <https://getbootstrap.com/>
 [InertiaJS]: <https://inertiajs.com/>
 [VueJS]: <https://vuejs.org/>
+[Here]: <https://chatastic.prmdyaz.my.id>
+
+## Demo
+[Here]
+
